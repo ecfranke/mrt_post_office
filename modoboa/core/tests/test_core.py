@@ -13,6 +13,7 @@ from oauth2_provider.models import get_application_model
 from django.conf import settings
 from django.core import mail
 from django.core import management
+from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -131,6 +132,14 @@ class ManagementCommandsTestCase(SimpleModoTestCase):
             "OAUTH_POST_REDIRECT_URI",
         ]:
             self.assertFalse(config[param].startswith("http"))
+
+    @override_settings(MODOBOA_PUBLIC_URL="http://localhost:8080")
+    def test_init_data_uses_configured_public_url(self):
+        """OAuth registrations honor scheme and non-standard public ports."""
+        management.call_command("load_initial_data", "--relative-urls-in-config")
+        app = get_application_model().objects.get(name="modoboa_frontend")
+        self.assertEqual(app.redirect_uris, "http://localhost:8080/login/logged")
+        self.assertEqual(app.post_logout_redirect_uris, "http://localhost:8080")
 
     def test_generate_postfix_maps(self):
         """Run generate_postfix_maps command"""

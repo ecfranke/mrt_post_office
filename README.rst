@@ -47,10 +47,12 @@ Mail transport boundary
 
 M Post Office is the administration and webmail application layer. Configure
 ``IMAP_*`` and ``SMTP_*`` in ``.env`` to connect it to an existing
-Postfix/Dovecot installation or a managed mail service. The production Compose
-file deliberately does not expose SMTP/IMAP ports; running a public mail
-transport safely also requires DNS, PTR/rDNS, DKIM, SPF, DMARC, abuse controls
-and deliverability monitoring.
+Postfix/Dovecot installation or a compatible managed mail service. Mailbox
+provisioning also requires the transport layer to use M Post Office SQL maps or
+the configured ``doveadm`` REST API. The production Compose file deliberately
+does not expose SMTP/IMAP ports; running a public mail transport safely also
+requires DNS, PTR/rDNS, DKIM, SPF, DMARC, abuse controls and deliverability
+monitoring.
 
 License and upstream
 ====================

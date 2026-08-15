@@ -49,9 +49,9 @@ init() {
     openssl genpkey -algorithm RSA \
       -pkeyopt rsa_keygen_bits:4096 \
       -out "$SECRETS_DIR/oidc_private_key.pem"
-    chmod 600 "$SECRETS_DIR/oidc_private_key.pem" "$ENV_FILE"
     echo "Generated the OIDC signing key."
   fi
+  chmod 600 "$SECRETS_DIR/oidc_private_key.pem" "$ENV_FILE"
 
   echo "Initialization complete. Edit .env, replace example domains, then run:"
   echo "  ./scripts/deploy.sh doctor"

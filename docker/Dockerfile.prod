@@ -4,7 +4,7 @@ WORKDIR /build/frontend
 COPY frontend/package.json frontend/yarn.lock ./
 RUN corepack enable && yarn install --frozen-lockfile
 COPY frontend/ ./
-RUN yarn build
+RUN yarn gettext:compile && yarn build
 
 
 FROM python:3.14-alpine AS python-build
@@ -43,8 +43,9 @@ RUN apk add --no-cache \
 COPY --from=python-build /opt/venv /opt/venv
 WORKDIR /app
 COPY test_project ./test_project
+COPY docker/doveadm /usr/local/bin/doveadm
 COPY docker/entrypoint.prod.sh /usr/local/bin/m-post-office-entrypoint
-RUN chmod +x /usr/local/bin/m-post-office-entrypoint \
+RUN chmod +x /usr/local/bin/doveadm /usr/local/bin/m-post-office-entrypoint \
     && mkdir -p /app/var/static /app/var/media /app/var/data /var/www/frontend
 
 EXPOSE 8000

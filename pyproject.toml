@@ -114,7 +114,6 @@ modoboa-cli = "modoboa:modoboa_admin"
 
 [project.urls]
 Upstream = "https://github.com/modoboa/modoboa"
-Deployment = "./DEPLOYMENT.md"
 
 [tool.setuptools.dynamic]
 version = {attr = "modoboa.version.get_version"}

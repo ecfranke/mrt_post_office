@@ -31,6 +31,7 @@ DEBUG = False
 SECRET_KEY = _required("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = _csv("DJANGO_ALLOWED_HOSTS", os.environ.get("APP_DOMAIN", "localhost"))
 CSRF_TRUSTED_ORIGINS = _csv("DJANGO_CSRF_TRUSTED_ORIGINS")
+MODOBOA_PUBLIC_URL = _required("PUBLIC_URL")
 
 DATABASES["default"] = {  # noqa: F405
     "ENGINE": "django.db.backends.postgresql",
@@ -101,6 +102,11 @@ EMAIL_CLIENT_CONNECTION_SETTINGS = {
         "PORT": int(os.environ.get("SMTP_PORT", "587")),
     },
 }
+
+DOVECOT_OPERATION_MODE = os.environ.get("DOVECOT_OPERATION_MODE", "rest")
+DOVEADM_API_URL = os.environ.get("DOVEADM_API_URL", "")
+DOVEADM_API_KEY = os.environ.get("DOVEADM_API_KEY", "")
+DOVEADM_API_TIMEOUT = int(os.environ.get("DOVEADM_API_TIMEOUT", "10"))
 
 MODOBOA_CUSTOM_LOGO = "/sitestatic/css/m-post-office-white.svg"
 SPECTACULAR_SETTINGS = {  # noqa: F405

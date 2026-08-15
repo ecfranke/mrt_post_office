@@ -36,7 +36,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.prod
     restart: unless-stopped
-    env_file: .env
+    env_file: ${M_POST_OFFICE_ENV_FILE:-.env}
     command: ["web"]
     depends_on:
       db:
@@ -61,7 +61,7 @@ services:
   worker:
     image: ${M_POST_OFFICE_IMAGE:-m-post-office:local}
     restart: unless-stopped
-    env_file: .env
+    env_file: ${M_POST_OFFICE_ENV_FILE:-.env}
     command: ["worker"]
     depends_on:
       web:
@@ -76,7 +76,7 @@ services:
   scheduler:
     image: ${M_POST_OFFICE_IMAGE:-m-post-office:local}
     restart: unless-stopped
-    env_file: .env
+    env_file: ${M_POST_OFFICE_ENV_FILE:-.env}
     command: ["scheduler"]
     depends_on:
       web:

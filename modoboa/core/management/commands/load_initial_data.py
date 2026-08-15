@@ -118,8 +118,14 @@ class Command(BaseCommand):
                 allowed_host = "localhost"
             allowed_host = [allowed_host]
         frontend_application = app_model.objects.filter(name="modoboa_frontend")
-        # TODO : improve support for multiple allowed_host for frontend
-        base_uris_list = [f"https://{host}" for host in allowed_host]
+        public_url = getattr(settings, "MODOBOA_PUBLIC_URL", "").rstrip("/")
+        # A configured public URL is authoritative and may include a non-default
+        # port (useful behind a reverse proxy or for isolated local testing).
+        base_uris_list = (
+            [public_url]
+            if public_url
+            else [f"https://{host}" for host in allowed_host]
+        )
         base_uris = " ".join(base_uris_list)
         base_uri = base_uris_list[0]
         redirect_uris = " ".join([f"{uri}/login/logged" for uri in base_uris_list])
