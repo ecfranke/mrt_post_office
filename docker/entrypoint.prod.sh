@@ -30,9 +30,7 @@ case "${1:-web}" in
       --name "${APP_NAME:-M Post Office}" \
       --admin-username "${ADMIN_USERNAME:-admin}" \
       --relative-urls-in-config
-    python manage.py set_default_site \
-      --name "${APP_NAME:-M Post Office}" \
-      --domain "${APP_DOMAIN:-localhost}"
+    python manage.py set_default_site "${APP_DOMAIN:-localhost}"
     python manage.py shell -c \
       'import os; from django.contrib.auth import get_user_model; u=get_user_model().objects.get(username=os.environ.get("ADMIN_USERNAME", "admin")); u.set_password(os.environ["ADMIN_PASSWORD"]); u.save(update_fields=["password"])'
     python manage.py collectstatic --noinput --clear
