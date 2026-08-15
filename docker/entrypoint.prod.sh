@@ -5,7 +5,14 @@ cd /app/test_project
 
 wait_for_database() {
   attempts=0
-  until python manage.py showmigrations --plan >/dev/null 2>&1; do
+  until python -c '
+import os
+import socket
+
+host = os.environ.get("POSTGRES_HOST", "db")
+port = int(os.environ.get("POSTGRES_PORT", "5432"))
+socket.create_connection((host, port), 3).close()
+' >/dev/null 2>&1; do
     attempts=$((attempts + 1))
     if [ "$attempts" -ge 60 ]; then
       echo "Database did not become ready in time." >&2

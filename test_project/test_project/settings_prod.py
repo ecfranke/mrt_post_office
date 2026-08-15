@@ -28,6 +28,12 @@ def _read_secret(name: str, default_path: str) -> str:
 
 
 DEBUG = False
+# ``test_project.settings`` also powers the development Compose stack and
+# includes runserver_plus. The production image intentionally does not install
+# that development-only package.
+INSTALLED_APPS = tuple(
+    app for app in INSTALLED_APPS if app != "django_extensions"  # noqa: F405
+)
 SECRET_KEY = _required("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = _csv("DJANGO_ALLOWED_HOSTS", os.environ.get("APP_DOMAIN", "localhost"))
 CSRF_TRUSTED_ORIGINS = _csv("DJANGO_CSRF_TRUSTED_ORIGINS")
