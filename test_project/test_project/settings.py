@@ -261,7 +261,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
-    "TITLE": "Modoboa API",
+    "TITLE": "M Post Office API",
     "VERSION": None,
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_FILTER_INSPECTORS": [
@@ -270,11 +270,11 @@ SPECTACULAR_SETTINGS = {
     "SERVERS": [
         {
             "url": "http://localhost",
-            "description": "Modoboa Mail Server Unsecure Endpoint",
+            "description": "M Post Office Mail Server Unsecured Endpoint",
         },
         {
             "url": "https://localhost",
-            "description": "Modoboa Mail Server Secure Endpoint",
+            "description": "M Post Office Mail Server Secure Endpoint",
         },
     ],
 }

@@ -20,7 +20,7 @@
       >
         <div class="text-headline-small">MX</div>
         <pre>
-mail.{{ domain.name }}. IN A <strong>[{{$gettext('IP address of your Modoboa server')}}]</strong>
+mail.{{ domain.name }}. IN A <strong>[{{$gettext('IP address of your M Post Office server')}}]</strong>
 @ IN MX 10 mail.{{ domain.name }}.</pre>
       </v-alert>
       <v-alert

@@ -37,7 +37,7 @@ onMounted(async () => {
   if (response.data.params.custom_welcome_message) {
     welcomeMsg.value = response.data.params.custom_welcome_message
   } else {
-    welcomeMsg.value = $gettext('Welcome to Modoboa')
+    welcomeMsg.value = $gettext('Welcome to M Post Office')
   }
 })
 </script>

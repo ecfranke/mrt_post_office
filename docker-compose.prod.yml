@@ -1,0 +1,129 @@
+name: ${COMPOSE_PROJECT_NAME:-m-post-office}
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  web:
+    image: ${M_POST_OFFICE_IMAGE:-m-post-office:local}
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    restart: unless-stopped
+    env_file: .env
+    command: ["web"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    secrets:
+      - oidc_private_key
+    volumes:
+      - static_data:/app/var/static
+      - media_data:/app/var/media
+      - app_data:/app/var/data
+      - frontend_data:/var/www/frontend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8000), 3).close()"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    networks: [backend]
+
+  worker:
+    image: ${M_POST_OFFICE_IMAGE:-m-post-office:local}
+    restart: unless-stopped
+    env_file: .env
+    command: ["worker"]
+    depends_on:
+      web:
+        condition: service_healthy
+    secrets:
+      - oidc_private_key
+    volumes:
+      - media_data:/app/var/media
+      - app_data:/app/var/data
+    networks: [backend]
+
+  scheduler:
+    image: ${M_POST_OFFICE_IMAGE:-m-post-office:local}
+    restart: unless-stopped
+    env_file: .env
+    command: ["scheduler"]
+    depends_on:
+      web:
+        condition: service_healthy
+    secrets:
+      - oidc_private_key
+    volumes:
+      - media_data:/app/var/media
+      - app_data:/app/var/data
+    networks: [backend]
+
+  gateway:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+      ACME_EMAIL: ${ACME_EMAIL}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - static_data:/srv/static:ro
+      - media_data:/srv/media:ro
+      - frontend_data:/srv/frontend:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [backend]
+
+secrets:
+  oidc_private_key:
+    file: ./deploy/secrets/oidc_private_key.pem
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_data:
+  media_data:
+  app_data:
+  frontend_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  backend:
+    driver: bridge

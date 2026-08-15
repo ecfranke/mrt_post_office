@@ -1,0 +1,52 @@
+FROM node:22-alpine AS frontend-build
+
+WORKDIR /build/frontend
+COPY frontend/package.json frontend/yarn.lock ./
+RUN corepack enable && yarn install --frozen-lockfile
+COPY frontend/ ./
+RUN yarn build
+
+
+FROM python:3.14-alpine AS python-build
+
+ENV VIRTUAL_ENV=/opt/venv \
+    PATH=/opt/venv/bin:$PATH \
+    SETUPTOOLS_SCM_PRETEND_VERSION=1.0.0
+
+RUN apk add --no-cache \
+      build-base cargo cairo-dev file gettext git jpeg-dev libffi-dev \
+      libxml2-dev libxslt-dev mariadb-dev openldap-dev openssl-dev \
+      python3-dev rrdtool-dev
+RUN python -m venv "$VIRTUAL_ENV" && pip install --upgrade 'pip<26'
+
+WORKDIR /build
+COPY . .
+COPY --from=frontend-build /build/modoboa/frontend_dist ./modoboa/frontend_dist
+RUN pip install '.[postgresql]' 'gunicorn>=23,<24'
+
+
+FROM python:3.14-alpine AS runtime
+
+LABEL org.opencontainers.image.title="M Post Office" \
+      org.opencontainers.image.description="M Post Office mail administration and webmail"
+
+ENV VIRTUAL_ENV=/opt/venv \
+    PATH=/opt/venv/bin:$PATH \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    DJANGO_SETTINGS_MODULE=test_project.settings_prod
+
+RUN apk add --no-cache \
+      cairo gettext libjpeg libldap libmagic librrd libxslt mariadb-connector-c \
+      openssl postgresql-libs rrdtool su-exec
+
+COPY --from=python-build /opt/venv /opt/venv
+WORKDIR /app
+COPY test_project ./test_project
+COPY docker/entrypoint.prod.sh /usr/local/bin/m-post-office-entrypoint
+RUN chmod +x /usr/local/bin/m-post-office-entrypoint \
+    && mkdir -p /app/var/static /app/var/media /app/var/data /var/www/frontend
+
+EXPOSE 8000
+ENTRYPOINT ["m-post-office-entrypoint"]
+CMD ["web"]

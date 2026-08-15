@@ -182,7 +182,7 @@ class PasswordResetView(auth_views.PasswordResetView):
         secret = cryptutils.random_hex_key(20)
         code = oath.totp(secret)
         text = _(
-            "Please use the following code to recover your Modoboa password: {}".format(
+            "Please use the following code to recover your M Post Office password: {}".format(
                 code
             )
         )
@@ -235,7 +235,7 @@ class ResendSMSCodeView(generic.View):
         secret = cryptutils.random_hex_key(20)
         code = oath.totp(secret)
         text = _(
-            "Please use the following code to recover your Modoboa password: {}".format(
+            "Please use the following code to recover your M Post Office password: {}".format(
                 code
             )
         )

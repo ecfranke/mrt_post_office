@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 160" role="img" aria-labelledby="title">
+  <title id="title">M Post Office</title>
+  <g fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="12" y="28" width="128" height="104" rx="20"/>
+    <path d="m24 48 52 42 52-42M42 116V72l34 28 34-28v44"/>
+  </g>
+  <text x="168" y="104" fill="#fff" font-family="Inter,Roboto,Arial,sans-serif" font-size="70" font-weight="700" letter-spacing="-2">M Post Office</text>
+</svg>

@@ -548,7 +548,7 @@ router.beforeEach(async (to, from, next) => {
 
   document.title = config.HTML_PAGE_TITLE
     ? config.HTML_PAGE_TITLE
-    : 'Welcome to Modoboa'
+    : 'M Post Office'
   if (to.meta?.requiresAuth === true) {
     const previousPage = window.location.href
     sessionStorage.setItem('previousPage', previousPage)

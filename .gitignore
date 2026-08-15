@@ -50,5 +50,8 @@ test_project/media
 docker/collections
 docker/redis
 docker/mariadb
+/deploy/secrets/
+/backups/
+/.env
 
 *.djcache

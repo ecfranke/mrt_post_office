@@ -59,7 +59,7 @@
               <li
                 v-html="
                   $gettext(
-                    'Inform <strong>ALL</strong> your users that they must login to Modoboa to complete the operation',
+                    'Inform <strong>ALL</strong> your users that they must login to M Post Office to complete the operation',
                     true
                   )
                 "
@@ -69,7 +69,7 @@
               class="mt-4"
               v-html="
                 $gettext(
-                  'You must apply this procedure <strong>BEFORE</strong> you install a newest version of Modoboa, otherwise <strong>you will be unable to connect to the web interface anymore</strong>.',
+                  'You must apply this procedure <strong>BEFORE</strong> you install a newer version of M Post Office, otherwise <strong>you will be unable to connect to the web interface anymore</strong>.',
                   true
                 )
               "

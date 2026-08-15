@@ -1,0 +1,36 @@
+{
+  email {$ACME_EMAIL}
+}
+
+{$SITE_ADDRESS} {
+  encode zstd gzip
+
+  header {
+    X-Content-Type-Options nosniff
+    X-Frame-Options SAMEORIGIN
+    Referrer-Policy same-origin
+    -Server
+  }
+
+  handle_path /sitestatic/* {
+    root * /srv/static
+    header Cache-Control "public, max-age=604800, immutable"
+    file_server
+  }
+
+  handle_path /media/* {
+    root * /srv/media
+    file_server
+  }
+
+  @backend path /api/* /accounts/* /reset/* /robots.txt /autoconfig/* /mail/* /.well-known/*
+  handle @backend {
+    reverse_proxy web:8000
+  }
+
+  handle {
+    root * /srv/frontend
+    try_files {path} /index.html
+    file_server
+  }
+}

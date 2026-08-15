@@ -17,7 +17,7 @@
       <p>
         {{
           $gettext(
-            'The credentials are the same than the ones you use to access Modoboa.'
+            'The credentials are the same as the ones you use to access M Post Office.'
           )
         }}
       </p>

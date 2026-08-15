@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.4"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "modoboa"
+name = "m-post-office"
 dynamic = ["version"]
 authors = [
   { name="Antoine Nguyen", email="tonio@ngyn.org" },
 ]
-description = "Mail hosting made simple"
+description = "M Post Office mail administration and webmail platform"
 readme = "README.rst"
 requires-python = ">=3.10"
 classifiers = [
@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Communications :: Email",
     "Topic :: Internet :: WWW/HTTP",
 ]
-keywords = ["email"]
+keywords = ["email", "webmail", "mail-server", "m-post-office"]
 license = {file = "LICENSE"}
 dependencies = [
 	"django==5.2.17",
@@ -109,17 +109,12 @@ test = [
 ldap = ["django-auth-ldap<6.0.0"]
 
 [project.scripts]
+m-post-office = "modoboa:modoboa_admin"
 modoboa-cli = "modoboa:modoboa_admin"
 
 [project.urls]
-Homepage = "http://modoboa.org/"
-Documentation = "https://modoboa.readthedocs.io/en/latest/"
-Discussion = "https://github.com/modoboa/modoboa/discussions"
-Repository = "https://github.com/modoboa/modoboa"
-Changelog = "https://github.com/modoboa/modoboa/blob/master/CHANGELOG.md"
-Issues = "https://github.com/modoboa/modoboa/issues"
-Wiki = "https://github.com/modoboa/modoboa/wiki"
-Demo = "https://demo.modoboa.org/"
+Upstream = "https://github.com/modoboa/modoboa"
+Deployment = "./DEPLOYMENT.md"
 
 [tool.setuptools.dynamic]
 version = {attr = "modoboa.version.get_version"}

@@ -14,7 +14,7 @@ export function useLogos() {
       return globalConfig.MENU_LOGO_PATH
     }
     const imgUrl = new URL(
-      '@/assets/Modoboa_RVB-BLANC-SANS.png',
+      '@/assets/m-post-office-white.svg',
       import.meta.url
     ).href
     return imgUrl
@@ -28,7 +28,7 @@ export function useLogos() {
       return globalConfig.CREATION_FORM_LOGO_PATH
     }
     const imgUrl = new URL(
-      '@/assets/Modoboa_RVB-BLEU-SANS.png',
+      '@/assets/m-post-office-blue.svg',
       import.meta.url
     ).href
     return imgUrl

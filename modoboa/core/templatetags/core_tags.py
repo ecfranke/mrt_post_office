@@ -24,5 +24,5 @@ def get_modoboa_logo(context):
     except AttributeError:
         logo = None
     if logo is None:
-        return os.path.join(settings.STATIC_URL, "css/modoboa-white.png")
+        return os.path.join(settings.STATIC_URL, "css/m-post-office-white.svg")
     return logo

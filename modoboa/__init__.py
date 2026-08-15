@@ -1,12 +1,15 @@
-"""Modoboa - Mail hosting made simple."""
+"""M Post Office, based on the Modoboa mail platform."""
 
 from importlib.metadata import version, PackageNotFoundError
 
 try:
-    __version__ = version(__name__)
+    __version__ = version("m-post-office")
 except PackageNotFoundError:
-    # package is not installed
-    __version__ = None
+    try:
+        # Compatibility with installations made before the project rebrand.
+        __version__ = version("modoboa")
+    except PackageNotFoundError:
+        __version__ = None
 
 
 def modoboa_admin():
