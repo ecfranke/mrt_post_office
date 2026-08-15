@@ -9,9 +9,18 @@ SECRETS_DIR="$PROJECT_DIR/deploy/secrets"
 BACKUP_DIR="$PROJECT_DIR/backups"
 
 cd "$PROJECT_DIR"
+export M_POST_OFFICE_ENV_FILE="${M_POST_OFFICE_ENV_FILE:-$ENV_FILE}"
+
+if docker info >/dev/null 2>&1; then
+  DOCKER=(docker)
+elif [[ "${EUID:-$(id -u)}" -ne 0 ]] && command -v sudo >/dev/null 2>&1; then
+  DOCKER=(sudo docker)
+else
+  DOCKER=(docker)
+fi
 
 compose() {
-  docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@"
+  "${DOCKER[@]}" compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@"
 }
 
 need() {
@@ -60,7 +69,7 @@ init() {
 
 doctor() {
   need docker
-  docker compose version >/dev/null
+  "${DOCKER[@]}" compose version >/dev/null
   [[ -f "$ENV_FILE" ]] || { echo "Run './scripts/deploy.sh init' first." >&2; exit 1; }
   [[ -s "$SECRETS_DIR/oidc_private_key.pem" ]] || { echo "OIDC key is missing; run init." >&2; exit 1; }
 

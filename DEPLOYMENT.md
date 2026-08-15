@@ -73,6 +73,49 @@ Caddy 申请 ACME 证书前必须满足：
 
 ## 4. 首次安装
 
+### 4.0 一键安装（推荐）
+
+在 Ubuntu、Debian、RHEL/Rocky/AlmaLinux 或 Fedora 服务器上进入仓库后执行：
+
+```bash
+sudo bash scripts/install.sh
+```
+
+脚本会自动完成：
+
+1. 检测操作系统和 root/sudo 权限；
+2. 从 Docker 官方软件源安装 Docker Engine、Buildx 和 Compose 插件；
+3. 启用 Docker 服务；
+4. 交互收集域名、ACME 邮箱、IMAP、SMTP 和可选 doveadm API；
+5. 生成数据库、Django、管理员和 OIDC 随机密钥；
+6. 配置 UFW/firewalld（已启用时）；
+7. 校验配置、构建镜像并启动全部生产服务；
+8. 输出访问地址和初始管理员密码。
+
+无人值守安装示例：
+
+```bash
+sudo bash scripts/install.sh \
+  --domain mail.example.com \
+  --email ops@example.com \
+  --admin-user admin \
+  --imap-host imap.example.com \
+  --smtp-host smtp.example.com \
+  --doveadm-url https://imap.example.com:8080/doveadm/v1 \
+  --non-interactive
+```
+
+仅用于本机验证：
+
+```bash
+sudo bash scripts/install.sh --local
+# 打开 http://localhost:8080
+```
+
+完整参数：`bash scripts/install.sh --help`。如果 Docker 已由运维平台管理，可加 `--skip-docker-install`；如果防火墙由云安全组或其他系统管理，可加 `--skip-firewall`。
+
+脚本可重复执行。已有 `.env`、OIDC 私钥和 Docker 数据卷不会被删除；重复执行会保留密钥并重建/升级应用。下文是同一安装过程的手动步骤，适合需要逐项控制的环境。
+
 ### 4.1 获取代码
 
 ```bash

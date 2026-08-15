@@ -19,6 +19,25 @@ The production stack includes PostgreSQL, Redis, the Django/Gunicorn API, RQ
 workers, the scheduler, the built Vue frontend and a Caddy gateway with
 automatic HTTPS.
 
+One-click installation on a supported Linux server:
+
+.. code-block:: bash
+
+   sudo bash scripts/install.sh
+
+For unattended installation:
+
+.. code-block:: bash
+
+   sudo bash scripts/install.sh \
+     --domain mail.example.com \
+     --email ops@example.com \
+     --imap-host imap.example.com \
+     --smtp-host smtp.example.com \
+     --non-interactive
+
+The lower-level deployment workflow remains available:
+
 .. code-block:: bash
 
    ./scripts/deploy.sh init
