@@ -73,8 +73,14 @@ doctor() {
   [[ -f "$ENV_FILE" ]] || { echo "Run './scripts/deploy.sh init' first." >&2; exit 1; }
   [[ -s "$SECRETS_DIR/oidc_private_key.pem" ]] || { echo "OIDC key is missing; run init." >&2; exit 1; }
 
-  if grep -Eq '(^|[.=])example\.(com|net|org)([:/]|$)|CHANGE_ME' "$ENV_FILE"; then
-    echo ".env still contains example domains or CHANGE_ME values." >&2
+  local placeholder_keys
+  placeholder_keys="$(awk -F= '
+    /^[[:space:]]*#/ || /^[[:space:]]*$/ { next }
+    /(^|[.=])example\.(com|net|org)([:\/]|$)|CHANGE_ME/ { print $1 }
+  ' "$ENV_FILE")"
+  if [[ -n "$placeholder_keys" ]]; then
+    echo ".env still contains example domains or CHANGE_ME values in:" >&2
+    echo "$placeholder_keys" | sed 's/^/  - /' >&2
     exit 1
   fi
   compose config --quiet
